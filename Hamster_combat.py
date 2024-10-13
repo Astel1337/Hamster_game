@@ -5,10 +5,13 @@ import os
 pygame.init()
 
 # Размеры окна
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 600, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Hamster Combat")
 
+# Загрузка и масштабирование фона
+background_img = pygame.image.load('harry_potter_background.jpg')
+background_img = pygame.transform.scale(background_img, (WIDTH, HEIGHT))
 
 # Загрузка изображений для анимации
 def load_animation_images(folder_name):
@@ -17,7 +20,6 @@ def load_animation_images(folder_name):
         img = pygame.image.load(os.path.join(folder_name, file_name))
         images.append(img)
     return images
-
 
 # Персонаж с анимацией
 class Character(pygame.sprite.Sprite):
@@ -42,6 +44,16 @@ class Character(pygame.sprite.Sprite):
         self.rect.x += self.velocity.x
         self.rect.y += self.velocity.y
 
+        # Границы персонажа
+        if self.rect.left < 0:
+            self.rect.left = 0
+        if self.rect.right > WIDTH:
+            self.rect.right = WIDTH
+        if self.rect.top < 0:
+            self.rect.top = 0
+        if self.rect.bottom > HEIGHT:
+            self.rect.bottom = HEIGHT
+
     def move(self, direction):
         if direction == 'left':
             self.velocity.x = -5
@@ -55,7 +67,6 @@ class Character(pygame.sprite.Sprite):
     def stop(self):
         self.velocity = pygame.math.Vector2(0, 0)
 
-
 # Основной цикл игры
 def main():
     clock = pygame.time.Clock()
@@ -68,7 +79,7 @@ def main():
 
     while running:
         # FPS
-        clock.tick(60)
+        clock.tick(30)
 
         # Обработка событий
         for event in pygame.event.get():
@@ -92,7 +103,7 @@ def main():
         all_sprites.update()
 
         # Отрисовка
-        screen.fill((30, 30, 30))  # фон
+        screen.blit(background_img, (0, 0))  # отрисовка фона
         all_sprites.draw(screen)  # рисуем спрайты
         pygame.display.flip()
 
