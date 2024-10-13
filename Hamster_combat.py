@@ -79,7 +79,7 @@ def main():
 
     while running:
         # FPS
-        clock.tick(30)
+        clock.tick(60)
 
         # Обработка событий
         for event in pygame.event.get():
